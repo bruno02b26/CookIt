@@ -22,3 +22,11 @@ CookIt is a comprehensive web application built using Symfony, designed to help 
 - **React**: Used for the search and sort functionality of recipes.
 - **CSS & HTML**: For styling and structuring the web pages.
 - **Bootstrap**: For responsive and modern UI components.
+
+## Demo
+
+- Check out [YouTube video](https://www.youtube.com/watch?v=gRBW0J1PaGQ) for a brief overview of the application and its features.
+
+## Authors
+
+- [@bruno02b26](https://github.com/bruno02b26)
