@@ -1,0 +1,201 @@
+{% extends 'layouts/base_main.html.twig' %}
+
+{% block title %}Recipes{% endblock %}
+
+{% block nav %}
+    <a class="nav-item active">
+        <img src="{{ asset('images/nav/recipe.svg') }}" class="img-fluid" style="height: 100%;">
+    </a>
+    <a class="nav-item" href="/lists">
+        <img src="{{ asset('images/nav/list.svg') }}" class="img-fluid" style="height: 80%;">
+    </a>
+    <a class="nav-item" href="/cooking">
+        <img src="{{ asset('images/nav/cooking.svg') }}" class="img-fluid" style="height: 80%;">
+    </a>
+    <a class="nav-item" href="/stats">
+        <img src="{{ asset('images/nav/stats.svg') }}" class="img-fluid" style="height: 80%;">
+    </a>
+    <a class="nav-item" href="/contact">
+        <img src="{{ asset('images/nav/contact.svg') }}" class="img-fluid" style="height: 100%;">
+    </a>
+    <a class="nav-item" href="/about">
+        <img src="{{ asset('images/nav/about.svg') }}" class="img-fluid" style="height: 80%;">
+    </a>
+{% endblock %}
+
+    {% block centre %}
+        <div class="container text-center" style="padding-left: 11vw;">
+            {% include 'includes/_sort_add.html.twig' with {'cuisines': cuisines, 'dietaryTypes': dietaryTypes, 'recipeTypes': recipeTypes} %}
+            <div id="recipes-root" data-recipes="{{ recipes|json_encode }}"></div>
+            <script>
+                if (!sessionStorage.getItem('pageReloaded')) {
+                    sessionStorage.setItem('pageReloaded', 'true');
+                    window.location.reload();
+                } else {
+                    sessionStorage.removeItem('pageReloaded');
+                }
+            </script>
+        </div>
+    {% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+
+    <script>
+        const { useState, useEffect } = React;
+        const { render } = ReactDOM;
+
+        const RecipeApp = ({ initialRecipes }) => {
+            const [recipes, setRecipes] = useState([]);
+            const [sortOrder, setSortOrder] = useState('date-desc');
+            const [searchQuery, setSearchQuery] = useState('');
+            const [debouncedQuery, setDebouncedQuery] = useState('');
+
+            const sortRecipes = (recipes, sortOrder) => {
+                let sortedRecipes = [...recipes];
+                switch (sortOrder) {
+                    case 'date-asc':
+                        sortedRecipes.sort((a, b) => new Date(a.date) - new Date(b.date));
+                        break;
+                    case 'date-desc':
+                        sortedRecipes.sort((a, b) => new Date(b.date) - new Date(a.date));
+                        break;
+                    case 'name-asc':
+                        sortedRecipes.sort((a, b) => a.title.localeCompare(b.title));
+                        break;
+                    case 'name-desc':
+                        sortedRecipes.sort((a, b) => b.title.localeCompare(a.title));
+                        break;
+                    default:
+                        break;
+                }
+                return sortedRecipes;
+            };
+
+            const filterRecipes = (recipes, query) => {
+                if (!query || query.length < 3) {
+                    return recipes;
+                }
+                return recipes.filter(recipe => recipe.title.toLowerCase().includes(query.toLowerCase()));
+            };
+
+            useEffect(() => {
+                if (initialRecipes.length > 0) {
+                    const sortedInitialRecipes = sortRecipes(initialRecipes, 'date-desc');
+                    setRecipes(sortedInitialRecipes);
+                }
+            }, [initialRecipes]);
+
+            useEffect(() => {
+                const sortSelect = document.querySelector('.form-select');
+                if (sortSelect) {
+                    sortSelect.value = 'date-desc';
+                    sortSelect.addEventListener('change', (e) => {
+                        setSortOrder(e.target.value);
+                    });
+                }
+            }, []);
+
+            useEffect(() => {
+                setRecipes(sortRecipes(initialRecipes, sortOrder));
+            }, [sortOrder, initialRecipes]);
+
+            useEffect(() => {
+                const handler = setTimeout(() => {
+                    setDebouncedQuery(searchQuery);
+                }, 300);
+
+                return () => {
+                    clearTimeout(handler);
+                };
+            }, [searchQuery]);
+
+            const filteredRecipes = filterRecipes(recipes, debouncedQuery);
+
+            useEffect(() => {
+                const elements = document.querySelectorAll('.fade-in');
+                elements.forEach(el => {
+                    el.classList.add('visible');
+                });
+            }, [filteredRecipes]);
+
+            return React.createElement(
+                'div',
+                null,
+                React.createElement(
+                    'div',
+                    { style: { zIndex: '200', margin: 'auto', position: 'fixed', width: '40vw', top: '5%', left: '50%', transform: 'translate(-50%, -50%)' } },
+                    React.createElement(
+                        'form',
+                        { style: { width: '100%' } },
+                        React.createElement(
+                            'div',
+                            { className: 'search d-flex align-items-center sm-screen-search', style: { borderRadius: '18px' } },
+                            React.createElement('input', {
+                                type: 'text',
+                                id: 'search',
+                                className: 'form-control search',
+                                placeholder: 'Search',
+                                style: { fontSize: '1.2rem' },
+                                value: searchQuery,
+                                onChange: (e) => setSearchQuery(e.target.value)
+                            }),
+                            React.createElement(
+                                'button',
+                                { type: 'button', style: { width: '80px', borderRadius: '18px' } },
+                                React.createElement(
+                                    'svg',
+                                    { xmlns: 'http://www.w3.org/2000/svg', width: '30', height: '30', fill: '#000000', className: 'bi bi-search', viewBox: '0 0 16 16' },
+                                    React.createElement('path', { d: 'M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0' })
+                                )
+                            )
+                        )
+                    )
+                ),
+                React.createElement(
+                    'div',
+                    { className: 'row d-flex justify-content-center align-items-center g-3 w-100 mt-3' },
+                    filteredRecipes.map((recipe, index) =>
+                        React.createElement(
+                            'div',
+                            { key: index, className: 'col-lg-4 d-flex justify-content-center align-items-center fade-in' },
+                            React.createElement(
+                                'figure',
+                                { className: 'figure w-100' },
+                                React.createElement('img', {
+                                    src: `/images/upload/${recipe.image}`,
+                                    className: 'figure-img img-fluid rounded scale w-100',
+                                    style: { cursor: 'pointer', maxHeight: '30vh', objectFit: 'cover' },
+                                    onClick: () => navigateToRecipe(`/recipe/${recipe.id}`)
+                                }),
+                                React.createElement('figcaption', { className: 'figure-caption', style: { fontSize: '1.5rem' } }, recipe.title)
+                            )
+                        )
+                    )
+                )
+            );
+        };
+
+        const navigateToRecipe = (url) => {
+            console.log('Navigating to recipe:', url);
+            window.location.href = url;
+        };
+
+        const recipesRoot = document.getElementById('recipes-root');
+        if (recipesRoot) {
+            const initialRecipesData = recipesRoot.getAttribute('data-recipes');
+            console.log('Initial recipes data:', initialRecipesData);
+            try {
+                const initialRecipes = JSON.parse(initialRecipesData);
+                render(React.createElement(RecipeApp, { initialRecipes: initialRecipes }), recipesRoot);
+            } catch (error) {
+                console.error('Error parsing initial recipes data:', error);
+            }
+        } else {
+            console.error('Recipes root element not found');
+        }
+    </script>
+{% endblock %}

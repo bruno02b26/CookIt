@@ -1,0 +1,209 @@
+<div class="row d-inline-flex justify-content-between g-2 w-100" style="margin-top: 15vh;">
+    <div class="col-3" style="text-align: left; font-size: 1.2rem;">
+        <select class="form-select" class="w-100 h-100">
+            <option value="date-asc">date asc</option>
+            <option value="date-desc">date desc</option>
+            <option value="name-asc">name asc</option>
+            <option value="name-desc">name desc</option>
+        </select>
+    </div>
+    <div class="col-1 d-flex me-3 justify-content-center align-items-center" style="width: 86px;">
+        {% if app.user %}
+        <button class="w-100 h-100" type="button" data-bs-toggle="modal" data-bs-target="#staticBackdrop" style="border: solid 3px var(--bs-primary); height: 52px; width: 86px; border-radius: 18px;">
+            <img src="{{ asset('images/main/tags/add-fill.png') }}" class="figure-img img-fluid rounded m-0" style="width: 40px;">
+        </button>
+        {% endif %}
+    </div>
+
+    {% include 'includes/_add_recipe.html.twig' with {'cuisines': cuisines, 'dietaryTypes': dietaryTypes, 'recipeTypes': recipeTypes} %}
+
+</div>
+
+<script>
+    document.getElementById('add-button').addEventListener('click', function() {
+        const rowContainer = document.getElementById('dynamicRowsContainer');
+        const newRow = document.createElement('div');
+        newRow.classList.add('dynamic-row');
+        newRow.innerHTML = `
+            <input class="form-control" type="number" name="quantity[]" id="quantity" placeholder="quantity" min="0" required style="width: calc((10vw + 280px) / 5 - 30px);">
+                            <input class="form-control" type="text" name="fraction[]" id="fraction" placeholder="fraction" required style="width: calc((10vw + 280px) / 5 - 30px);">
+                            <input class="form-control" type="text" name="unit[]" id="unit" placeholder="unit" required style="width: calc((10vw + 280px) / 5 - 30px);">
+                            <input class="form-control" type="text" name="ingredient[]" id="ingredient" placeholder="ingredient" required style="width: calc((10vw + 280px) / 3 - 50px);">
+                            <div style="display: flex; align-items: center; width: 100%;">
+                                <input class="form-control" type="text" name="note[]" id="note" placeholder="note" autocapitalize="sentences" maxlength="25" style="width: calc(100% - 42px); margin-right: 10px;">
+                                <span class="remove-button" style="cursor: pointer;">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-dash-circle" viewBox="0 0 16 16">
+                                            <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
+                                            <path d="M4 8a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7A.5.5 0 0 1 4 8"/>
+                                        </svg>
+                                    </span>
+                            </div>
+        `;
+        rowContainer.appendChild(newRow);
+        attachRemoveEvent(newRow.querySelector('.remove-button'));
+        newRow.querySelectorAll('.form-control').forEach(input => {
+            input.addEventListener('input', validateInput);
+        });
+    });
+
+    function attachRemoveEvent(button) {
+        button.addEventListener('click', function() {
+            const rowContainer = document.getElementById('dynamicRowsContainer');
+            if (rowContainer.children.length > 1) {
+                button.parentElement.parentElement.remove();
+                validateAllInputs();
+            }
+        });
+    }
+
+    document.querySelectorAll('.remove-button').forEach(attachRemoveEvent);
+
+    document.getElementById('dynamicForm').addEventListener('submit', function(event) {
+        event.preventDefault();
+        // validateAllInputs(true);
+
+        const form = event.target;
+        const formData = new FormData(form);
+        const ingredients = [];
+
+        document.querySelectorAll('.dynamic-row').forEach(row => {
+            const quantity = row.querySelector('input[name="quantity[]"]').value;
+            const fraction = row.querySelector('input[name="fraction[]"]').value;
+            const unit = row.querySelector('input[name="unit[]"]').value;
+            const ingredient = row.querySelector('input[name="ingredient[]"]').value;
+            const note = row.querySelector('input[name="note[]"]').value;
+
+            if (quantity && fraction && unit && ingredient) {
+                ingredients.push({quantity, fraction, unit, ingredient, note});
+            }
+        });
+
+        const dietSelect = document.getElementById('diet');
+        const selectedDiets = Array.from(dietSelect.selectedOptions).map(option => option.value);
+        formData.append('diet', JSON.stringify(selectedDiets));
+
+        formData.append('ingredients', JSON.stringify(ingredients));
+
+        formData.delete('quantity[]');
+        formData.delete('fraction[]');
+        formData.delete('unit[]');
+        formData.delete('ingredient[]');
+        formData.delete('note[]');
+
+        fetch('http://127.0.0.1:8000/recipes/add_recipe', {
+            method: 'POST',
+            body: formData
+        })
+            .then(response => {
+                if (!response.ok) {
+                    return response.json().then(data => {
+                        throw new Error(data.message || 'Server error');
+                    });
+                }
+                return response.json();
+            })
+            .then(data => {
+
+                console.log('Success:', data);
+                const successDiv = document.getElementById('success');
+                successDiv.style.color = 'green'
+                successDiv.style.visibility = 'visible'
+                console.log(successDiv);
+                successDiv.textContent = 'Added recipe successfully.'
+
+                setTimeout(() => {
+                    window.location.href = '/recipes';
+                    successDiv.style.visibility = 'hidden';
+                }, 2000);
+            })
+            .catch(error => {
+                console.error('Error:', error.message);
+                const successDiv = document.getElementById('success');
+                successDiv.textContent = error.message;
+                successDiv.style.color = 'red'
+                successDiv.style.visibility = 'visible';
+            });
+    })
+
+    function validateInput(event) {
+        const input = event.target;
+        const value = input.value.trim().toLowerCase();
+        const placeholder = input.getAttribute('placeholder');
+        console.log(input, value, placeholder);
+        let apiEndpoint = '';
+
+        if (value.length === 0) {
+            input.style.borderColor = '';
+            input.style.boxShadow = '';
+            delete input.dataset.valid;
+            validateAllInputs();
+            return;
+        }
+
+        switch (placeholder) {
+            case 'fraction':
+                apiEndpoint = '/api/fractions';
+                break;
+            case 'unit':
+                apiEndpoint = '/api/units';
+                break;
+            case 'ingredient':
+                apiEndpoint = '/api/ingredients';
+                break;
+            default:
+                return;
+        }
+
+        fetch(apiEndpoint)
+            .then(response => response.json())
+            .then(data => {
+                let exists = false;
+                if (placeholder === 'unit') {
+                    exists = data['hydra:member'].some(item => item.name.toLowerCase() === value || item.abbr.toLowerCase() === value);
+                } else {
+                    exists = data['hydra:member'].some(item => item.name.toLowerCase() === value);
+                }
+                if (exists) {
+                    input.style.borderColor = '';
+                    input.style.boxShadow = '';
+                    input.dataset.valid = 'true';
+                    submitBtn.disabled = false;
+                    submitBtn.cursor = 'pointer';
+                } else {
+                    input.style.borderColor = 'red';
+                    input.style.boxShadow = '0 0 5px red';
+                    input.dataset.valid = 'false';
+                    submitBtn.disabled = true;
+                    submitBtn.cursor = 'default';
+                }
+                validateAllInputs();
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+    }
+
+    function validateAllInputs(submit = false) {
+        const allInputs = document.querySelectorAll('.form-control');
+        const submitBtn = document.getElementById('submitBtn');
+        let allValid = true;
+
+        allInputs.forEach(input => {
+            if (input.dataset.valid === 'false') {
+                allValid = false;
+            }
+        });
+
+        submitBtn.disabled = !allValid;
+
+        if (submit && allValid) {
+            document.getElementById('dynamicForm').submit();
+        }
+    }
+
+    document.querySelectorAll('.form-control').forEach(input => {
+        input.addEventListener('input', validateInput);
+    });
+
+</script>
+

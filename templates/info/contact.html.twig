@@ -1,0 +1,59 @@
+{% extends 'layouts/base_main.html.twig' %}
+
+{% block title %}Contact{% endblock %}
+
+{% block nav %}
+    <a class="nav-item" href="/recipes">
+        <img src="{{ asset('images/nav/recipe.svg') }}" class="img-fluid" style="height: 100%;">
+    </a>
+    <a class="nav-item" href="/lists">
+        <img src="{{ asset('images/nav/list.svg') }}" class="img-fluid" style="height: 80%;">
+    </a>
+    <a class="nav-item" href="/cooking">
+        <img src="{{ asset('images/nav/cooking.svg') }}" class="img-fluid" style="height: 80%;">
+    </a>
+    <a class="nav-item" href="/stats">
+        <img src="{{ asset('images/nav/stats.svg') }}" class="img-fluid" style="height: 80%;">
+    </a>
+    <a class="nav-item active">
+        <img src="{{ asset('images/nav/contact.svg') }}" class="img-fluid" style="height: 100%;">
+    </a>
+    <a class="nav-item" href="/about">
+        <img src="{{ asset('images/nav/about.svg') }}" class="img-fluid" style="height: 80%;">
+    </a>
+{% endblock %}
+
+{% block centre %}
+    <div class="container" style="display: flex; justify-content: center; align-items: center; height: 50vh; margin-top: 12vh; padding-left: 11vw;">
+        <article style="margin-top: 35vh; width: calc(10vw + 300px); background-color: rgba(245, 186, 65, 0.1); flex-direction: column; height: 60vh; display: flex; justify-content: space-evenly; align-items: center; border-radius: 20px; border: 4px #F5BA41 solid; text-align: center;">
+            <div style="width: calc(100% - 20px); height: 9vh; ">
+                <div style="vertical-align: center; display: inline-block;">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="54" height="54" fill="currentColor" class="bi bi-chat-square" viewBox="0 0 16 16">
+                        <path d="M14 1a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1h-2.5a2 2 0 0 0-1.6.8L8 14.333 6.1 11.8a2 2 0 0 0-1.6-.8H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1zM2 0a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2.5a1 1 0 0 1 .8.4l1.9 2.533a1 1 0 0 0 1.6 0l1.9-2.533a1 1 0 0 1 .8-.4H14a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2z"/>
+                    </svg>
+                </div>
+                <span class="sm-screen" style="font-size: 36px; user-select: none; margin-left: 1rem;">Add new entry</span>
+            </div>
+
+            <form id="checkForm" style="display: flex; flex-direction: column; justify-content: center; align-items: center;">
+                <label for="category" class="form-label">category</label>
+                <select class="form-select" id="category">
+                    <option value="ingredients">ingredients</option>
+                    <option value="cuisines">cuisines</option>
+                    <option value="recipe_types">recipe_types</option>
+                    <option value="dietary_types">dietary_types</option>
+                </select>
+                <label for="name" class="form-label">name</label>
+                <input type="text" id="name" class="form-control">
+                <div id="error" style="color: red; margin-top: 10px;"></div>
+                <div id="success" style="color: green; margin-top: 10px;"></div>
+                <button type="submit" class="form-label submit" style="margin-top: 1.8rem; width: calc((10vw + 180px)/2); background-color: rgba(245,186,65,.8); height: 7vh; border: 2px #F5BA41 solid; border-radius: 10px; display: flex; justify-content: center; align-items: center;">Submit</button>
+            </form>
+        </article>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src="{{ asset('assets/scripts/js/contact.js') }}"></script>
+{% endblock %}

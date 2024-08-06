@@ -1,0 +1,27 @@
+{% extends 'layouts/base_init.html.twig' %}
+
+{% block title %}Log in{% endblock %}
+
+    {% block main %}
+        <div class="container" style="display: flex; justify-content: center; align-items: center; height: 50vh; margin-top: 12vh;">
+            <article style="margin-top: 35vh; width: calc(10vw + 300px); background-color: rgba(245, 186, 65, 0.1); flex-direction: column; height: 70vh; display: flex; justify-content: space-evenly; align-items: center; border-radius: 20px; border: 4px #F5BA41 solid; text-align: center;">
+                <div style="width: calc(10vw + 180px); height: 9vh; ">
+                    <span style="font-size: 36px; user-select: none">Log in</span>
+                </div>
+                <a href="/login-email" class="link-empty delayed-link">
+                    <div style="width: calc(10vw + 180px); background-color: white; height: 7vh; border: 2px #F5BA41 solid; border-radius: 10px; display: flex; justify-content: center; align-items: center;">
+                        <img src="{{ asset('images/main/security/email.png') }}" class="figure-img img-fluid rounded m-2 me-3">
+                        <span style="font-size: 28px; ">with Email</span>
+                    </div>
+                </a>
+                <div style="width: calc(10vw + 180px); height: 3vh; padding-top: 2vh;">
+                    <span style="font-size: 22px; user-select: none">Don't have an account?</span>
+                </div>
+                <a href="/register" class="delayed-link">
+                    <div style="width: calc(10vw + 180px); height: 3vh;">
+                        <span style="text-decoration: underline; font-size: 20px;  user-select: none">Join now</span>
+                    </div>
+                </a>
+            </article>
+        </div>
+    {% endblock %}

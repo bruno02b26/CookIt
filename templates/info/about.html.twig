@@ -1,0 +1,129 @@
+{% extends 'layouts/base_main.html.twig' %}
+
+{% block title %}About{% endblock %}
+
+{% block nav %}
+    <a class="nav-item" href="/recipes">
+        <img src="{{ asset('images/nav/recipe.svg') }}" class="img-fluid" style="height: 100%;">
+    </a>
+    <a class="nav-item" href="/lists">
+        <img src="{{ asset('images/nav/list.svg') }}" class="img-fluid" style="height: 80%;">
+    </a>
+    <a class="nav-item" href="/cooking">
+        <img src="{{ asset('images/nav/cooking.svg') }}" class="img-fluid" style="height: 80%;">
+    </a>
+    <a class="nav-item" href="/stats">
+        <img src="{{ asset('images/nav/stats.svg') }}" class="img-fluid" style="height: 80%;">
+    </a>
+    <a class="nav-item" href="/contact">
+        <img src="{{ asset('images/nav/contact.svg') }}" class="img-fluid" style="height: 100%;">
+    </a>
+    <a class="nav-item active">
+        <img src="{{ asset('images/nav/about.svg') }}" class="img-fluid" style="height: 80%;">
+    </a>
+{% endblock %}
+
+    {% block centre %}
+        <div class="container text-center" style="padding-left: 11vw; margin-top: 15vh;">
+            <div class="row d-flex justify-content-center align-items-start g-3 w-100 mt-3" style="font-size: 0.8rem;">
+                <div class="col-lg-3 d-flex justify-content-center align-items-start">
+                    <table class="table table-bordered table-hover table-condensed">
+                        <thead>
+                        <tr>
+                            <th>Unit</th>
+                            <th>Abbr</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for unit in units %}
+                            <tr>
+                                <td>{{ unit.name }}</td>
+                                <td>{{ unit.abbr }}</td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                <div class="col-lg-2 d-flex justify-content-center align-items-center">
+                    <table class="table table-bordered table-hover table-condensed">
+                        <thead>
+                        <tr>
+                            <th>Cuisine</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for cuisine in cuisines %}
+                            <tr>
+                                <td>{{ cuisine.name }}</td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                <div class="col-lg-2 d-flex justify-content-center align-items-center">
+                    <table class="table table-bordered table-hover table-condensed">
+                        <thead>
+                        <tr>
+                            <th>Recipe Type</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for recipeType in recipeTypes %}
+                            <tr>
+                                <td>{{ recipeType.name }}</td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                <div class="col-lg-2 d-flex justify-content-center align-items-center">
+                    <table class="table table-bordered table-hover table-condensed">
+                        <thead>
+                        <tr>
+                            <th>Dietary Type</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for dietaryType in dietaryTypes %}
+                            <tr>
+                                <td>{{ dietaryType.name }}</td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                <div class="col-lg-1 d-flex justify-content-center align-items-center">
+                    <table class="table table-bordered table-hover table-condensed">
+                        <thead>
+                        <tr>
+                            <th>Fraction</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for fraction in fractions %}
+                            <tr>
+                                <td>{{ fraction.name }}</td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                <div class="col-lg-2 d-flex justify-content-center align-items-start">
+                    <table class="table table-bordered table-hover table-condensed">
+                        <thead>
+                        <tr>
+                            <th>Ingredient</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for ingredient in ingredients %}
+                            <tr>
+                                <td>{{ ingredient.name }}</td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    {% endblock %}

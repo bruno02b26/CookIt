@@ -1,0 +1,242 @@
+{% extends 'layouts/base_main.html.twig' %}
+
+{% block title %}{{ recipe.title }}{% endblock %}
+
+{% block nav %}
+    <a class="nav-item" href="/recipes">
+        <img src="{{ asset('images/nav/recipe.svg') }}" class="img-fluid" style="height: 100%;">
+    </a>
+    <a class="nav-item" href="/lists">
+        <img src="{{ asset('images/nav/list.svg') }}" class="img-fluid" style="height: 80%;">
+    </a>
+    <a class="nav-item" href="/cooking">
+        <img src="{{ asset('images/nav/cooking.svg') }}" class="img-fluid" style="height: 80%;">
+    </a>
+    <a class="nav-item" href="/stats">
+        <img src="{{ asset('images/nav/stats.svg') }}" class="img-fluid" style="height: 80%;">
+    </a>
+    <a class="nav-item" href="/contact">
+        <img src="{{ asset('images/nav/contact.svg') }}" class="img-fluid" style="height: 100%;">
+    </a>
+    <a class="nav-item" href="/about">
+        <img src="{{ asset('images/nav/about.svg') }}" class="img-fluid" style="height: 80%;">
+    </a>
+{% endblock %}
+
+    {% block centre %}
+        <div class="container text-center" style="padding-left: 9vw;">
+            <div class="row d-flex justify-content-center align-items-center g-1 w-100">
+                <div class="col-lg-3 d-flex justify-content-center align-items-center">
+                    <div class="container" style="padding-top: 25px; margin-top: 10vh">
+                        <div class="row d-flex justify-content-center align-items-center g-1 w-100"
+                             style="padding: 10px 0;">
+                            <div class="col">
+                                <span id="user" class="img-tag" style="font-size: 1.5rem;;">{{ userEmail }}</span>
+                            </div>
+                        </div>
+                        <hr class="sm">
+                        <div class="row d-flex justify-content-center align-items-center g-1 w-100">
+                            <div class="col">
+                                <span style="font-size: 2rem;">{{ recipe.addTime|date('Y-m-d, H:i') }}</span>
+                            </div>
+                        </div>
+                        <hr class="sm">
+                        <div class="row d-flex justify-content-center align-items-center g-1 w-100">
+                            <div class="col">
+                                <img src="{{ asset('images/main/tags/' ~ (userActions.bookmark ? 'bookmark-fill.png' : 'bookmark.png')) }}"
+                                     data-action="bookmark" style="width: 48px;"
+                                     class="figure-img img-fluid rounded m-2">
+                            </div>
+                            <div class="col">
+                                <img src="{{ asset('images/main/tags/share.png') }}" data-action="share"
+                                     style="width: 48px;" class="figure-img img-fluid rounded m-2">
+                            </div>
+                            <div class="col">
+                                <img src="{{ asset('images/main/tags/' ~ (userActions.like ? 'like-fill.png' : 'like.png')) }}"
+                                     data-action="like" style="width: 48px;" class="figure-img img-fluid rounded m-2">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <figure class="figure">
+                        <figcaption class="figure-caption"
+                                    style="font-size: 48px; padding-top: 25px; margin-top: 10vh">{{ recipe.title }}</figcaption>
+                        <img src="{{ asset('images/upload/' ~ recipe.image) }}"
+                             class="figure-img img-fluid rounded w-100 sm-img-fig"
+                             style="height: 40vh; object-fit: cover;">
+                    </figure>
+                </div>
+                <div class="col-lg-3 d-flex justify-content-center align-items-center">
+                    <div class="container" style="padding-top: 25px; margin-top: 10vh">
+                        <div class="row d-flex justify-content-center align-items-center g-1 w-100">
+                            <div class="col">
+                                <img src="{{ asset('images/main/tags/clock.png') }}"
+                                     class="figure-img img-fluid rounded m-2">
+                                <span id="clock" class="img-tag">{{ recipe.prepTime }}</span>
+                            </div>
+                        </div>
+                        <hr class="sm">
+                        <div class="row d-flex justify-content-center align-items-center g-1 w-100"
+                             style="padding: 10px 0;">
+                            <div class="col">
+                                <img src="{{ asset('images/main/tags/serving.png') }}"
+                                     class="figure-img img-fluid rounded m-2">
+                                <span id="serving" class="img-tag">{{ recipe.noServing }}</span>
+                            </div>
+                        </div>
+                        <hr class="sm">
+                        <div class="row d-flex justify-content-center align-items-center g-1 w-100">
+                            <div class="col">
+                                <img src="{{ asset('images/main/tags/ingredient.png') }}"
+                                     class="figure-img img-fluid rounded m-2">
+                                <span id="ingredient" class="img-tag">{{ recipe.noIngredient }}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <hr>
+            <div class="row d-flex justify-content-center align-items-center ">
+                <div class="col-3">
+                    <img src="{{ asset('images/main/tags/type.png') }}" class="figure-img img-fluid rounded m-2">
+                    <span id="ingredient" class="img-tag-sm">{{ recipe.recipeType.name }}</span>
+                </div>
+                <div class="col-3">
+                    <img src="{{ asset('images/main/tags/cuisine.png') }}" class="figure-img img-fluid rounded m-2">
+                    <span id="ingredient" class="img-tag-sm">{{ recipe.cuisine.name }}</span>
+                </div>
+                <div class="col-6">
+                    <img src="{{ asset('images/main/tags/dietary_type.png') }}"
+                         class="figure-img img-fluid rounded m-2">
+                    <span id="ingredient" class="img-tag-sm">
+                    {% for type in dietaryTypes %}
+                        {{ type.name }}{% if not loop.last %}, {% endif %}
+                    {% endfor %}
+                    </span>
+                </div>
+            </div>
+            <hr>
+            <div class="row d-flex justify-content-center align-items-center">
+                <div class="col-12 h3">{{ recipe.description }}
+                </div>
+            </div>
+            <hr>
+            <div class="row d-flex justify-content-start align-items-start px-5" style="text-align: left;">
+                <span class="h2">Ingredients</span>
+                <div class="col-12">
+                    <ul>
+                        {% for ingredient in ingredients %}
+                            <li>
+                                    <span class="img-tag-sm">
+                                        {% if ingredient.quantity > 0 %}
+                                            {{ ingredient.quantity }}
+                                        {% endif %}
+                                        {% if ingredient.fraction %}
+                                            {{ ingredient.fraction }}
+                                        {% endif %}
+                                        {{ ingredient.unit }}
+                                        {{ ingredient.ingredient }}{% if ingredient.note is not empty %}, {{ ingredient.note }}
+                                        {% endif %}
+                                    </span>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+            <hr>
+            <div class="row d-flex justify-content-start align-items-start px-5 mb-5" style="text-align: left;">
+                <span class="h2">Preparation</span>
+                <div class="col-12">
+                            <span class="img-tag-sm">
+                                {{ recipe.preparation }}
+                            </span>
+                </div>
+            </div>
+        </div>
+    {% endblock %}
+
+{% block javascripts %}
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const actionElements = document.querySelectorAll('img[data-action]');
+
+            //CHANGE_USER
+             const userId = {{ app.user.id }};
+            // const userId = 1;
+
+            const recipeId = {{ recipe.id }};
+            const assetBaseUrl = "{{ asset('images/main/tags/') }}";
+
+            actionElements.forEach(img => {
+                img.addEventListener('click', (event) => {
+                    const action = event.target.getAttribute('data-action');
+                    console.log('Action clicked:', action);
+                    if (action === 'bookmark' || action === 'like') {
+                        const mappedAction = mapAction(action);
+                        toggleAction(mappedAction, userId, recipeId);
+                    } else if (action === 'share') {
+                        copyToClipboard();
+                    }
+                });
+            });
+
+            function mapAction(action) {
+                if (action === 'bookmark') {
+                    return 'favorite';
+                } else if (action === 'like') {
+                    return 'liked';
+                }
+                return action;
+            }
+
+            function toggleAction(action, userId, recipeId) {
+                fetch(`/recipe/toggle-action/${action}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        recipeId: recipeId,
+                        userId: userId
+                    })
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            console.log('Action successful:', action, data.status);
+                            updateIcon(action, data.status);
+                        } else {
+                            console.error('Error:', data.message);
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                    });
+            }
+
+            function copyToClipboard() {
+                navigator.clipboard.writeText(window.location.href)
+                    .then(() => {
+                        alert('Link copied to clipboard!');
+                    })
+                    .catch(err => {
+                        console.error('Failed to copy:', err);
+                    });
+            }
+
+            function updateIcon(action, status) {
+                const originalAction = action === 'favorite' ? 'bookmark' : action === 'liked' ? 'like' : action;
+                const statusSuffix = status === 'filled' ? '-fill' : '';
+                const icon = document.querySelector(`img[data-action="${originalAction}"]`);
+                if (icon) {
+                    const newSrc = `${assetBaseUrl}${originalAction}${statusSuffix}.png`;
+                    console.log(`Updating icon src for action ${originalAction} to ${newSrc}`);
+                    icon.src = newSrc;
+                } else {
+                    console.error(`Icon for action ${originalAction} not found`);
+                }
+            }
+        });
+    </script>
+{% endblock %}

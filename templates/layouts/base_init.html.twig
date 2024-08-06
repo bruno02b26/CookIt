@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}Welcome!{% endblock %}</title>
+    <link rel="icon" href="{{ asset('images/logo.ico') }}" type="image/x-icon">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href={{ asset('assets/vendor/bootstrap/dist/css/bootstrap.min-1712f0378f8675ca7cd423d6262fcccf.css') }}>
+    <link rel="stylesheet" href={{ asset('assets/styles/app-3aaf7faeed14cf0b3ef95d57b6c53733.css')}}
+    {% block stylesheets %}
+    {% endblock %}
+    </head>
+<body>
+<header style="display: flex; height: 10vh; align-content: center; justify-content: space-between; position:fixed; top: 0; width: 100%; z-index: 100;" class="bg-primary">
+    <div style="display: flex; justify-items: flex-start;">
+        <img src="{{ asset('images/header/main-logo.svg') }}" style="height: 100%;">
+    </div>
+</header>
+<main>
+    {% block main %}
+    {% endblock %}
+</main>
+{% block javascripts %}
+    <script src="{{ asset('assets/scripts/js/delayedLink.js') }}"></script>
+    {% block importmap %}{{ importmap('app') }}{% endblock %}
+{% endblock %}
+</body>
+</html>

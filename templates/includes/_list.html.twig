@@ -1,0 +1,75 @@
+<div class="col-lg-5 d-flex justify-content-center h3 p-1 m-2 position-relative" style="overflow-y: auto;
+bottom: 0; background-color: white; border-radius: 18px; border: 4px #F5BA41 solid; text-align: center;
+max-height: 60vh;">
+    <div style="width: 90%;">
+        <div class="h2 p3">{{ list.title }}</div>
+        <hr>
+        <span class="user-select-none">{{ list.addTime|date('Y-m-d, H:i') }}</span><br>
+        <hr>
+        <div class="user-select-none">
+            <img src="{{ asset('images/main/tags/ingredient.png') }}" class="figure-img img-fluid rounded m-2 user-select-none">
+            <span id="ingredient" class="img-tag-sm user-select-none">{{ ingredientCount }}</span>
+        </div>
+        <hr>
+        <ul>
+            {% for ingredient in ingredients %}
+                <li>
+                <span class="img-tag-sm">
+                    {% if ingredient.quantity > 0 %}
+                        {{ ingredient.quantity }}
+                    {% endif %}
+                    {% if ingredient.fraction %}
+                        {{ ingredient.fraction }}
+                    {% endif %}
+                    {{ ingredient.unit }}
+                    {{ ingredient.ingredient }}{% if ingredient.note is not empty %}, {{ ingredient.note }}
+                    {% endif %}
+                </span>
+                </li>
+            {% endfor %}
+        </ul>
+        <img src="{{ asset('images/main/shopping_list/bin.png') }}" class="figure-img img-fluid rounded m-2 position-absolute img-bin" style="top: 0; right: 0; cursor: pointer;" data-id="{{ list.id }}" onclick="deleteList(this)">
+    </div>
+</div>
+
+<script>
+    function deleteList(element) {
+        const listId = element.getAttribute('data-id');
+
+        if (confirm('Are you sure you want to delete this list?')) {
+            fetch(`/lists/delete/${listId}`, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status === 'success') {
+                        const listElement = element.closest('.col-lg-5');
+                        listElement.remove();
+
+                        updateHrElements();
+                    } else {
+                        alert('Failed to delete the list: ' + data.message);
+                    }
+                })
+                .catch(error => console.error('Error:', error));
+        }
+    }
+
+    function updateHrElements() {
+        const container = document.querySelector('.row.d-flex.justify-content-between.align-items-center.g-3.w-100.mt-3');
+        const lists = container.querySelectorAll('.col-lg-5');
+        const hrs = container.querySelectorAll('hr');
+
+        hrs.forEach(hr => hr.remove());
+
+        lists.forEach((list, index) => {
+            if ((index + 1) % 2 === 0 && index !== lists.length - 1) {
+                const hr = document.createElement('hr');
+                list.after(hr);
+            }
+        });
+    }
+</script>

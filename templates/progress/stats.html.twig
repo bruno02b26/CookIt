@@ -1,0 +1,69 @@
+{% extends 'layouts/base_main.html.twig' %}
+
+{% block title %}Stats{% endblock %}
+
+{% block nav %}
+    <a class="nav-item" href="/recipes">
+        <img src="{{ asset('images/nav/recipe.svg') }}" class="img-fluid" style="height: 100%;">
+    </a>
+    <a class="nav-item" href="/lists">
+        <img src="{{ asset('images/nav/list.svg') }}" class="img-fluid" style="height: 80%;">
+    </a>
+    <a class="nav-item" href="/cooking">
+        <img src="{{ asset('images/nav/cooking.svg') }}" class="img-fluid" style="height: 80%;">
+    </a>
+    <a class="nav-item active">
+        <img src="{{ asset('images/nav/stats.svg') }}" class="img-fluid" style="height: 80%;">
+    </a>
+    <a class="nav-item" href="/contact">
+        <img src="{{ asset('images/nav/contact.svg') }}" class="img-fluid" style="height: 100%;">
+    </a>
+    <a class="nav-item" href="/about">
+        <img src="{{ asset('images/nav/about.svg') }}" class="img-fluid" style="height: 80%;">
+    </a>
+{% endblock %}
+
+    {% block centre %}
+        <div class="container text-center" style="padding-left: 11vw;">
+            <div class="row d-inline-flex justify-content-between align-items-center
+            g-2 w-100 mt-md" style="margin-top: 30vh;">
+                <div class="row d-flex justify-content-center align-items-center g-3 w-100 mt-3">
+                    <div class="col-lg-8 d-flex justify-content-center align-items-center">
+                        <span style="font-size: 2.6rem;">Total (unique) recipes: {{ totalRecipes }} ({{ uniqueRecipes }})</span>
+                    </div>
+                </div>
+                <div class="row d-flex justify-content-center align-items-center g-3 w-100 mt-3">
+                    <div class="col-lg-4 d-flex justify-content-center align-items-center">
+                        <div>
+                            <span style="font-size: 2.2em;">Favourite recipes:</span>
+                            <ul style="font-size: 1.3em; list-style-type: none;">
+                                {% for recipe in favoriteRecipes %}
+                                    <li>{{ loop.index }}. {{ recipe.title }} ({{ recipe.occurrences }})</li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 d-flex justify-content-center align-items-center">
+                        <div>
+                            <span style="font-size: 2.2em;">Favourite types:</span>
+                            <ul style="font-size: 1.3em; list-style-type: none;">
+                                {% for type in favoriteRecipeTypes %}
+                                    <li>{{ loop.index }}. {{ type.name }} ({{ type.occurrences }})</li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 d-flex justify-content-center align-items-center">
+                        <div>
+                            <span style="font-size: 2.2rem;">Favourite cuisines:</span>
+                            <ul style="font-size: 1.3em; list-style-type: none;">
+                                {% for cuisine in favoriteCuisines %}
+                                    <li>{{ loop.index }}. {{ cuisine.name }} ({{ cuisine.occurrences }})</li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endblock %}

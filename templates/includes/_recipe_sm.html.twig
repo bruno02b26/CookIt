@@ -1,0 +1,20 @@
+{% set image_path = recipe.image %}
+{% set image_parts = image_path|split('.') %}
+{% set image_name = image_parts|slice(0, -1)|join('.') %}
+
+<div class="col-lg-4 d-flex justify-content-center align-items-center">
+    <figure class="figure w-100">
+        <img src="{{ asset('images/upload/' ~ recipe.image) }}" class="figure-img img-fluid rounded scale w-100"
+             style="cursor: pointer;  max-height: 30vh; object-fit: cover;"
+             data-url="{{ path('app_recipe_details', { 'id': recipe.id }) }}"
+             onclick="navigateToRecipe(this)">
+        <figcaption class="figure-caption" style="font-size: 1.5rem;">{{ recipe.title }}</figcaption>
+    </figure>
+</div>
+
+<script>
+    function navigateToRecipe(element) {
+        const url = element.getAttribute('data-url');
+        window.location.href = url;
+    }
+</script>

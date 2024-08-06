@@ -1,0 +1,17 @@
+<div class="col-lg-4 d-flex justify-content-center align-items-center">
+    <div class="row">
+        <div class="col-7">
+            <img src="{{ asset('images/upload/' ~ progress.image) }}" class="figure-img img-fluid rounded scale-big"
+                 style="cursor: pointer; user-select: none;"
+                 data-url="{{ path('app_recipe_details', { 'id': progress.id }) }}"
+                 onclick="navigateToRecipe(this)">
+            <figcaption class="figure-caption" style="font-size: 1.5rem;">{{ progress.recipeName }}</figcaption>
+        </div>
+        <div class="col-5 d-flex flex-column align-items-start ps-0" style="text-align: left; justify-items: start;">
+            <div><div style="font-size: 1.2rem; user-select: none; margin: 0.5rem 0.5rem 3rem 0.5rem;">start:<br><div class="text-center">{{ progress.startTime|date('Y-m-d') }}<br>{{ progress.startTime|date('H:i') }}</div></div>
+            </div>
+            <div><div style="font-size: 1.2rem; user-select: none; margin: 0.5rem 0.5rem 3rem 0.5rem;">end:<br><div class="text-center">{{ progress.endTime|date('Y-m-d') }}<br>{{ progress.endTime|date('H:i') }}</div></div>
+            </div>
+        </div>
+    </div>
+</div>

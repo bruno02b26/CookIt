@@ -1,0 +1,47 @@
+{% extends 'layouts/base_main.html.twig' %}
+
+{% block title %}Your lists{% endblock %}
+
+{% block nav %}
+    <a class="nav-item" href="/recipes">
+        <img src="{{ asset('images/nav/recipe.svg') }}" class="img-fluid" style="height: 100%;">
+    </a>
+    <a class="nav-item active">
+        <img src="{{ asset('images/nav/list.svg') }}" class="img-fluid" style="height: 80%;">
+    </a>
+    <a class="nav-item" href="/cooking">
+        <img src="{{ asset('images/nav/cooking.svg') }}" class="img-fluid" style="height: 80%;">
+    </a>
+    <a class="nav-item" href="/stats">
+        <img src="{{ asset('images/nav/stats.svg') }}" class="img-fluid" style="height: 80%;">
+    </a>
+    <a class="nav-item" href="/contact">
+        <img src="{{ asset('images/nav/contact.svg') }}" class="img-fluid" style="height: 100%;">
+    </a>
+    <a class="nav-item" href="/about">
+        <img src="{{ asset('images/nav/about.svg') }}" class="img-fluid" style="height: 80%;">
+    </a>
+{% endblock %}
+
+    {% block centre %}
+        <div class="container text-center" style="padding-left: 15vw; margin-bottom: 5vh;">
+            {% include 'includes/_add_list.html.twig' %}
+
+            <div class="row d-flex justify-content-between align-items-center g-3 w-100 mt-3">
+                {% for list in lists %}
+                {% include 'includes/_list.html.twig' with {'list': list.list, 'ingredients': list.ingredients, 'ingredientCount': list.ingredientCount} %}
+                {% if loop.index is divisible by(2) and not loop.last %}
+                    <hr>
+                {% endif %}
+                {% endfor %}
+            </div>
+
+            {% set remainder = lists|length % 2 %}
+            {% if remainder != 0 %}
+                {% for i in 1..(2 - remainder) %}
+                    <div class="col placeholder-div"></div>
+                {% endfor %}
+            {% endif %}
+        </div>
+    {% endblock %}
+

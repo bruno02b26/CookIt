@@ -1,0 +1,96 @@
+<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="staticBackdropLabel" style="user-select: none">Create recipe</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form id="dynamicForm" action="{{ path('app_recipe_add') }}" method="post" enctype="multipart/form-data" style="display: flex; flex-direction: column; justify-content: center; align-items: center; justify-items: center">
+                {% if app.user %}
+                    <input type="hidden" name="id_user" value="{{ app.user.id }}">
+                {% endif %}
+                <div class="modal-body" style="max-height: calc(100vh - 200px); overflow-y: auto;">
+                    <label for="name" class="form-label" style="user-select: none">name</label>
+                    <input type="text" id="name" name="name" class="form-control" required autocapitalize="sentences" minlength="10" maxlength="50" style="margin: auto; width: calc((10vw + 280px)); font-size: 1.2rem; text-align: center;">
+                    <label for="formFile" class="form-label" style="user-select: none">image</label>
+                    <input class="form-control" type="file" name="file" id="formFile" accept="image/*" required style="margin: auto; height: 5vh; width: calc((10vw + 280px));">
+
+                    <div style="width: calc(10vw + 280px); display: flex; justify-content: space-between; align-items: center; margin: 1.4rem auto auto;">
+                        <div>
+                            <label for="prep_time" class="form-label" style="user-select: none">prep. time</label>
+                            <input class="form-control" type="number" name="prep_time" id="prep_time" required min="1" style="height: 5vh; width: calc((10vw + 280px) / 2 - 10px); margin: auto 10px auto auto;text-align: center;">
+                        </div>
+                        <div>
+                            <label for="no_servings" class="form-label" style="user-select: none">no. servings</label>
+                            <input class="form-control" type="number" name="no_servings" id="no_servings" required min="1" style="height: 5vh; width: calc((10vw + 280px) / 2 - 10px); margin: auto auto auto 10px;text-align: center;">
+                        </div>
+                    </div>
+                    <label for="type" class="form-label" style="margin: 1.4rem auto auto; user-select: none">type</label>
+                    <select class="form-select" id="type" name="type" required style="width: calc((10vw + 280px));">
+                        {% for type in recipeTypes %}
+                            <option value="{{ type.name }}">{{ type.name }}</option>
+                        {% endfor %}
+                    </select>
+                    <label for="cuisine" class="form-label" style="margin: 1.4rem auto auto; user-select: none">cuisine</label>
+                    <select class="form-select" id="cuisine" name="cuisine" required style="width: calc((10vw + 280px));">
+                        {% for cuisine in cuisines %}
+                            <option value="{{ cuisine.name }}">{{ cuisine.name }}</option>
+                        {% endfor %}
+                    </select>
+                    <label for="diet" class="form-label" style="margin: 1.4rem auto auto; user-select: none">diet</label>
+                    <select class="form-select" id="diet" name="diet" multiple style="width: calc((10vw + 280px)); height: 14vh;">
+                        {% for dietaryType in dietaryTypes %}
+                            <option value="{{ dietaryType.name }}">{{ dietaryType.name }}</option>
+                        {% endfor %}
+                    </select>
+
+                    <p style="margin-top: 1.8rem; margin-bottom: 0.4rem; font-size: 1.4rem; user-select: none">ingredients
+                        <span style="margin-left: 0.4rem;" id="add-button">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-plus-circle" viewBox="0 0 16 16">
+                                <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
+                                <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4"/>
+                            </svg>
+                        </span>
+                    </p>
+                    <div class="form-text" style="font-size: 0.8rem; user-select: none">
+                        Enter quantity, fraction, unit, ingredient and note (optional).
+                    </div>
+
+                    <div id="dynamicRowsContainer">
+                        <div class="dynamic-row">
+                            <input class="form-control" type="number" name="quantity[]" id="quantity" placeholder="quantity" min="0" required style="width: calc((10vw + 280px) / 5 - 30px);">
+                            <input class="form-control" type="text" name="fraction[]" id="fraction" placeholder="fraction" required style="width: calc((10vw + 280px) / 5 - 30px);">
+                            <input class="form-control" type="text" name="unit[]" id="unit" placeholder="unit" required style="width: calc((10vw + 280px) / 5 - 30px);">
+                            <input class="form-control" type="text" name="ingredient[]" id="ingredient" placeholder="ingredient" required style="width: calc((10vw + 280px) / 3 - 50px);">
+                            <div style="display: flex; align-items: center; width: 100%;">
+                                <input class="form-control" type="text" name="note[]" id="note" placeholder="note" autocapitalize="sentences" maxlength="25" style="width: calc(100% - 42px); margin-right: 10px;">
+                                <span class="remove-button" style="cursor: pointer;">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-dash-circle" viewBox="0 0 16 16">
+                                            <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
+                                            <path d="M4 8a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7A.5.5 0 0 1 4 8"/>
+                                        </svg>
+                                    </span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <label for="description" class="form-label" style="user-select: none">description</label>
+                    <div class="form-text" style="font-size: 0.8rem; user-select: none">
+                        Max 255 characters.
+                    </div>
+                    <textarea class="form-control" id="description" name="description" minlength="25" maxlength="255" autocapitalize="sentences" required style="height: 5vh; margin: auto; width: calc((10vw + 280px)); resize: vertical; max-height: 9rem;"></textarea>
+
+                    <label for="preparation" class="form-label" style="user-select: none">preparation</label>
+                    <div class="form-text" style="font-size: 0.8rem; user-select: none">
+                        Max 2000 characters.
+                    </div>
+                    <textarea class="form-control" id="preparation" name="preparation" minlength="100" maxlength="2000" autocapitalize="sentences" required style="height: 10vh; margin: auto; width: calc((10vw + 280px)); resize: vertical; max-height: 36rem;"></textarea>
+                </div>
+                <div class="modal-footer d-block" style="height: 500px;">
+                    <div id="success" style="color: green; margin-top: 10px; font-size: 1rem; visibility: hidden; margin-bottom: 10px;">Added recipe successfully.</div>
+                    <button type="submit" id="submitBtn"  class="form-label submit" style="margin-top: -1rem; width: calc((10vw + 280px)/ 2); background-color: rgba(245,186,65,.8); height: 5vh; border: 2px #F5BA41 solid; border-radius: 10px; font-size: 1.2rem;">Submit</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

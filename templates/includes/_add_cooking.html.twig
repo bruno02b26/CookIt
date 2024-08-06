@@ -1,0 +1,78 @@
+<style>
+    #suggestions {
+        background-color: #fff;
+        max-height: 200px;
+        overflow-y: auto;
+        position: absolute;
+        width: calc(10vw + 280px);
+        z-index: 1000;
+    }
+
+    #suggestions li {
+        padding: 8px;
+        border-bottom: 1px solid #ddd;
+    }
+
+    #suggestions li:hover {
+        background-color: #f0f0f0;
+    }
+</style>
+
+<div class="row d-inline-flex justify-content-end g-2 w-100" style="margin-top: 15vh;">
+    <div class="col-1 d-flex me-3 justify-content-center align-items-center" style="width: 86px;">
+        <button class="w-100" type="button" data-bs-toggle="modal" data-bs-target="#staticBackdrop" style="border: solid 3px var(--bs-primary); height: 56px; width: 86px; border-radius: 18px;">
+            <img src="{{ asset('images/main/tags/add-fill.png') }}" class="figure-img img-fluid rounded m-0" style="width: 40px;">
+        </button>
+    </div>
+
+    <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="staticBackdropLabel" style="user-select: none">Create log</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form id="dynamicForm" action="{{ path('app_log_add') }}" method="post" style="display: flex; flex-direction: column; justify-content: center; align-items: center; justify-items: center">
+                    <input type="hidden" name="id_user" value={{ app.user.id }}>
+                    <div class="modal-body" style="max-height: calc(100vh - 200px); overflow-y: auto;">
+                        <label for="name" class="form-label" style="user-select: none">name</label>
+                        <input type="text" id="name" name="name" class="form-control"  required autocapitalize="sentences" minlength="5" maxlength="50" style="margin: auto; width: calc((10vw + 280px)); font-size: 1.2rem; text-align: center;">
+                        <input type="hidden" id="recipeId" name="recipe_id">
+                        <ul id="suggestions" style="list-style-type: none; padding: 0; margin: 0; border: 1px solid #ccc; display: none;"></ul>
+
+                        <p style="text-align: center; font-size: 1.4rem; margin-top: 1.4rem; user-select: none;">start</p>
+                        <div style="width: calc(10vw + 280px); display: flex; justify-content: space-between; align-items: center; margin: 1.4rem auto auto;">
+                            <div>
+                                <label for="start_date" style="user-select: none;">date:</label>
+                                <input type="date" id="start_date" name="start_date" required class="form-control" style="height: 5vh; width: calc((10vw + 280px) / 2 - 10px); margin: auto 10px auto auto;text-align: center;">
+                            </div>
+                            <div>
+                                <label for="start_time" style="user-select: none;">time:</label>
+                                <input type="time" id="start_time" name="start_time" required class="form-control" style="height: 5vh; width: calc((10vw + 280px) / 2 - 10px); margin: auto 10px auto auto;text-align: center;">
+                            </div>
+                        </div>
+
+                        <p style="text-align: center; font-size: 1.4rem; margin-top: 1.4rem; user-select: none;">end</p>
+                        <div style="width: calc(10vw + 280px); display: flex; justify-content: space-between; align-items: center; margin: 1.4rem auto auto;">
+                            <div>
+                                <label for="end_date" style="user-select: none;">date:</label>
+                                <input type="date" id="end_date" name="end_date" required class="form-control" style="height: 5vh; width: calc((10vw + 280px) / 2 - 10px); margin: auto 10px auto auto;text-align: center;">
+                            </div>
+                            <div>
+                                <label for="end_time" style="user-select: none;">time:</label>
+                                <input type="time" id="end_time" name="end_time" required class="form-control" style="height: 5vh; width: calc((10vw + 280px) / 2 - 10px); margin: auto 10px auto auto;text-align: center;">
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="modal-footer d-block">
+                        <div id="success" style="color: green; margin-top: 10px; font-size: 1rem; visibility: hidden;">Added log successfully.</div>
+                        <button type="submit" id="submitBtn" class="form-label submit" style="margin-bottom: 2rem; width: calc((10vw + 280px)/ 2); background-color: rgba(245,186,65,.8); height: 5vh; border: 2px #F5BA41 solid; border-radius: 10px; font-size: 1.2rem;">Submit</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="{{ asset('assets/scripts/js/addCooking.js') }}"></script>
